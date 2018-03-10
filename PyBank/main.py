@@ -108,7 +108,7 @@ def numeric_validator(dataset, key, format):
                 continue
 
         fail = len(dataset) - counter
-        pass_rate = (counter / len(dataset)) * 100 if counter <= 0 else pass_rate
+        pass_rate = (counter / len(dataset)) * 100 if counter >= 0 else pass_rate
         metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
 
     except KeyError as err:
@@ -139,7 +139,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
                 continue
 
         fail = len(dataset) - counter
-        pass_rate = (counter / len(dataset)) * 100 if counter <= 0 else pass_rate
+        pass_rate = (counter / len(dataset)) * 100 if counter >= 0 else pass_rate
         metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
 
     except KeyError as err:
