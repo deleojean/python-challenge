@@ -90,15 +90,27 @@ def date_validator(dataset, key='Date', format='%b-%y'):
     return metrics
 
 def metrics_table(*metrics):
-    print("\n\n Data Name".ljust(27) + " Pass/Fail".ljust(20) + " Pass Rate".rjust(6)) # column headers
-    print('-' * 60)
+    header_exist = False
 
-    for metric in metrics: # dictionary in a list
-        for data in metric:
-            row =  f" {data['name'].title().ljust(25)}"
-            row += f" {data['passfail'].title().ljust(19)}"
-            row += f" {data['rate'].title().rjust(6)}"
+    for metric in metrics:
+        try:
+            for data in metric: # validate keys
+                name     = data['name']
+                passfail = data['passfail']
+                rate     = data['rate']
+
+            if not header_exist:
+                print("\n Data Name".ljust(27) + " Pass/Fail".ljust(20) + " Pass Rate".rjust(6)) # column headers
+                print('-' * 60)
+                header_exist = True
+
+            row =  f" {name.title().ljust(25)}"
+            row += f" {passfail.title().ljust(19)}"
+            row += f" {rate.title().rjust(6)}"
             print(row)
+
+        except:
+            continue
 
     print('-' * 60)
 
