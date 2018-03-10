@@ -14,26 +14,26 @@ import sys
 # The greatest decrease in revenue (date and amount) over the entire period
 
 def csv_collector(*files):
-    dataset = []
+    new_dataset = []
 
     for file in files:
         if os.path.isfile(file): # validate file exist
-            print(f"FileFound: Collect csv data to dataset: '{file}'")
+            print(f"DEBUG [Collection] Collect csv data to dataset: '{file}'")
 
             with open(file, 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
-                for row in reader: dataset.append(row)
+                for row in reader: new_dataset.append(row)
         else:
-            print(f"FileNotFoundError: No such file or directory: '{file}'")
+            print(f"ERROR [Collection] No such file or directory: '{file}'")
 
-    return dataset
+    return new_dataset
 
 def date_translator(dataset, key='Date', format='%b-%y'):
     allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
-    new_dataset = []
+    new_dataset      = []
 
     if not format in allowed_strftime:
-        print(f"ArgumentError: Value not an allowed strftime format: '{format}'")
+        print(f"ERROR [Translation] Value not an allowed strftime format: '{format}'")
         sys.exit(1)  # abort because of invalid strftime
 
     try:
@@ -46,24 +46,24 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                     break
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
-                        print(f"DateFormatFail: Unhandled date format: '{data[key]}'")
+                        print(f"ERROR [Translation] Unhandled date format: '{data[key]}'")
 
                         continue
 
             # print(f"{index}  {data[key]}")
             new_dataset.append(data)
     except KeyError as err:
-        print("ArgumentError: Key value not found in collection:", err)
+        print("ERROR [Translation] Key value not found in collection:", err)
 
     return new_dataset
 
 def date_validator(dataset, key='Date', format='%b-%y'):
     allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
-    metrics = []
-    counter = 0
+    metrics          = []
+    counter          = 0
 
     if not format in allowed_strftime:
-        print(f"ArgumentError: Value not an allowed strftime format: '{format}'")
+        print(f"ERROR [Validation] Value not an allowed strftime format: '{format}'")
         sys.exit(1)  # abort because of invalid strftime
 
     for index, data in enumerate(dataset):
@@ -72,7 +72,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
 
             counter += 1
         except ValueError:
-            print(f"DateFormatFail: Date in invalid format: '{data[key]}'")
+            print(f"DEBUG [Validation] Date in invalid format: '{data[key]}'")
 
             continue
 
@@ -88,7 +88,7 @@ def metrics_table(*metrics):
 
     for metric in metrics: # dictionary in a list
         for data in metric:
-            row =  f" {data['name'].title().ljust(27)}"
+            row =  f" {data['name'].title().ljust(25)}"
             row += f" {data['passfail'].title().ljust(19)}"
             row += f" {data['rate'].title().rjust(6)}"
             print(row)
