@@ -98,14 +98,10 @@ def numeric_validator(dataset, key, format):
 
     try:
         for index, data in enumerate(dataset):
-            try:
-                format(data[key])
-
+            if type(format(1)) == type(data[key]):
                 counter += 1
-            except ValueError:
+            else:
                 print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
-
-                continue
 
         fail = len(dataset) - counter
         pass_rate = (counter / len(dataset)) * 100 if counter >= 0 else pass_rate
