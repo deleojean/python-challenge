@@ -57,10 +57,35 @@ def date_translator(dataset, key='Date', format='%b-%y'):
 
     return new_dataset
 
+def date_validator(dataset, key='Date', format='%b-%y'):
+    allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
+    metrics = []
+    counter = 0
+
+    if not format in allowed_strftime:
+        print(f"ArgumentError: Value not an allowed strftime format: '{format}'")
+        sys.exit(1)  # abort because of invalid strftime
+
+    for index, data in enumerate(dataset):
+        try:
+            datetime.datetime.strptime(data[key], format)
+
+            counter += 1
+        except ValueError:
+            print(f"DateFormatFail: Date in invalid format: '{data[key]}'")
+
+            continue
+
+    fail = len(dataset) - counter
+    pass_rate = (counter / len(dataset)) * 100
+    metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
+
+    return metrics
 
 budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
-budget_data= date_translator(budget_data)
+budget_data = date_translator(budget_data)
+metrics = date_validator(budget_data)
 
 # for i, j in enumerate(budget_data):
-#      print(f"{i}  {j}")
+#     print(f"{i}  {j}")
