@@ -48,8 +48,9 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
                         print(f"ERROR [Translation] Unhandled date format: '[{index}]{data[key]}'")
+                        print(f"DEBUG [Translation] Data not added to dataset: '[{index}]{data}'")
 
-                        continue
+                    continue
 
             new_dataset.append(data)
     except KeyError as err:
@@ -57,6 +58,64 @@ def date_translator(dataset, key='Date', format='%b-%y'):
         sys.exit(1)
 
     return new_dataset
+
+def numeric_translator(dataset, key, format):
+    allowed_numerics = [int, float, complex] # add numeric type as needed
+    new_dataset      = []
+
+    if not format in allowed_numerics:
+        print(f"ERROR [Translation] Value not an allowed numeric data type: '{format} {type(format)}'")
+        sys.exit(1)  # abort because of invalid numeric type
+
+    try:
+        for index, data in enumerate(dataset):
+            try:
+                formatted_numeric = format(data[key])
+
+                data[key] = formatted_numeric
+                new_dataset.append(data)
+            except:
+                print(f"ERROR [Translation] Unhandled numeric type: '[{index}]{data[key]}'")
+                print(f"DEBUG [Translation] Data not added to dataset: '[{index}]{data}'")
+
+                continue
+
+    except KeyError as err:
+        print("ERROR [Translation] Key value not found in collection:", err)
+        sys.exit(1)
+
+    return new_dataset
+
+def numeric_validator(dataset, key, format):
+    allowed_numerics = [int, float, complex] # add numeric type as needed
+    metrics          = []
+    counter          = 0
+    pass_rate        = 0
+
+    if not format in allowed_numerics:
+        print(f"ERROR [Translation] Value not an allowed numeric data type: '{format} {type(format)}'")
+        sys.exit(1)  # abort because of invalid numeric type
+
+    try:
+        for index, data in enumerate(dataset):
+            try:
+                format(data[key])
+
+                counter += 1
+            except ValueError:
+                print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
+
+                continue
+
+        fail = len(dataset) - counter
+        pass_rate = (counter / len(dataset)) * 100 if counter <= 0 else pass_rate
+        metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
+
+    except KeyError as err:
+        print("ERROR [Validation] Key value not found in collection:", err)
+        sys.exit(1)
+
+    return metrics
 
 def date_validator(dataset, key='Date', format='%b-%y'):
     allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
@@ -114,11 +173,20 @@ def metrics_table(*metrics):
 
     print('-' * 60)
 
+# collection
 budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
+
+# translation
 budget_data = date_translator(budget_data)
-metrics = date_validator(budget_data)
-metrics_table(metrics)
+budget_data = numeric_translator(budget_data, 'Revenue', int)
+
+# validation
+date_metrics = date_validator(budget_data)
+numeric_metrics = numeric_validator(budget_data, 'Revenue', int)
+
+# metrics
+metrics_table(date_metrics, numeric_metrics)
 
 # for i, j in enumerate(budget_data):
-#     print(f"{i}  {j}")
+#      print(f"{i}  {j}")
