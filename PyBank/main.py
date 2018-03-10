@@ -82,10 +82,25 @@ def date_validator(dataset, key='Date', format='%b-%y'):
 
     return metrics
 
+def metrics_table(*metrics):
+    print("\n\n Data Name".ljust(27) + " Pass/Fail".ljust(20) + " Pass Rate".rjust(6)) # column headers
+    print('-' * 60)
+
+    for metric in metrics: # dictionary in a list
+        for data in metric:
+            row =  f" {data['name'].title().ljust(27)}"
+            row += f" {data['passfail'].title().ljust(19)}"
+            row += f" {data['rate'].title().rjust(6)}"
+            print(row)
+
+    print('-' * 60)
+
 budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
-budget_data = date_translator(budget_data)
 metrics = date_validator(budget_data)
+budget_data = date_translator(budget_data)
+metrics2 = date_validator(budget_data)
+metrics_table(metrics, metrics2)
 
 # for i, j in enumerate(budget_data):
 #     print(f"{i}  {j}")
