@@ -44,7 +44,6 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                     formatted_date = datetime.datetime.strptime(data[key], strftime).strftime(format)
 
                     data[key] = formatted_date
-                    new_dataset.append(data)
                     break
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
@@ -53,6 +52,7 @@ def date_translator(dataset, key='Date', format='%b-%y'):
 
                     continue
 
+            new_dataset.append(data)
     except KeyError as err:
         print("ERROR [Translation] Key value not found in collection:", err)
         sys.exit(1)
@@ -69,11 +69,11 @@ def numeric_translator(dataset, key, format):
 
     try:
         for index, data in enumerate(dataset):
+            new_dataset.append(data)
             try:
                 formatted_numeric = format(data[key])
 
                 data[key] = formatted_numeric
-                new_dataset.append(data)
             except:
                 print(f"ERROR [Translation] Unhandled numeric type: '[{index}]{data[key]}'")
                 print(f"DEBUG [Translation] Data removed from dataset: '[{index}]{data}'")
@@ -174,12 +174,12 @@ budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
 
 # translation
-budget_data = date_translator(budget_data)
-budget_data = numeric_translator(budget_data, 'Revenue', int)
+translated_date = date_translator(budget_data)
+translated_numeric = numeric_translator(budget_data, 'Revenue', int)
 
 # validation
-date_metrics = date_validator(budget_data)
-numeric_metrics = numeric_validator(budget_data, 'Revenue', int)
+date_metrics = date_validator(translated_date)
+numeric_metrics = numeric_validator(translated_numeric, 'Revenue', int)
 
 # metrics
 metrics_table(date_metrics, numeric_metrics)
