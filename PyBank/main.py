@@ -54,6 +54,7 @@ def date_translator(dataset, key='Date', format='%b-%y'):
             new_dataset.append(data)
     except KeyError as err:
         print("ERROR [Translation] Key value not found in collection:", err)
+        sys.exit(1)
 
     return new_dataset
 
@@ -66,19 +67,24 @@ def date_validator(dataset, key='Date', format='%b-%y'):
         print(f"ERROR [Validation] Value not an allowed strftime format: '{format}'")
         sys.exit(1)  # abort because of invalid strftime
 
-    for index, data in enumerate(dataset):
-        try:
-            datetime.datetime.strptime(data[key], format)
+    try:
+        for index, data in enumerate(dataset):
+            try:
+                datetime.datetime.strptime(data[key], format)
 
-            counter += 1
-        except ValueError:
-            print(f"DEBUG [Validation] Date in invalid format: '{data[key]}'")
+                counter += 1
+            except ValueError:
+                print(f"DEBUG [Validation] Date in invalid format: '{data[key]}'")
 
-            continue
+                continue
 
-    fail = len(dataset) - counter
-    pass_rate = (counter / len(dataset)) * 100
-    metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
+        fail = len(dataset) - counter
+        pass_rate = (counter / len(dataset)) * 100
+        metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
+
+    except KeyError as err:
+        print("ERROR [Validation] Key value not found in collection:", err)
+        sys.exit(1)
 
     return metrics
 
