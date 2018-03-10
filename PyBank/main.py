@@ -62,6 +62,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
     allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
     metrics          = []
     counter          = 0
+    pass_rate        = 0
 
     if not format in allowed_strftime:
         print(f"ERROR [Validation] Value not an allowed strftime format: '{format}'")
@@ -79,7 +80,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
                 continue
 
         fail = len(dataset) - counter
-        pass_rate = (counter / len(dataset)) * 100
+        pass_rate = (counter / len(dataset)) * 100 if counter <= 0 else pass_rate
         metrics.extend([{'name': key, 'passfail': f"{counter}/{fail}", 'rate': f"{round(pass_rate, 2)}%"}])
 
     except KeyError as err:
