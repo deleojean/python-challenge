@@ -88,6 +88,7 @@ def numeric_translator(dataset, key, format):
 
 def numeric_validator(dataset, key, format):
     allowed_numerics = [int, float, complex] # add numeric type as needed
+    new_dataset      = []
     metrics          = []
     counter          = 0
     pass_rate        = 0
@@ -100,6 +101,7 @@ def numeric_validator(dataset, key, format):
         for index, data in enumerate(dataset):
             if type(format(1)) == type(data[key]):
                 counter += 1
+                new_dataset.append(data)
             else:
                 print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
 
@@ -111,10 +113,11 @@ def numeric_validator(dataset, key, format):
         print("ERROR [Validation] Key value not found in collection:", err)
         sys.exit(1)
 
-    return metrics
+    return metrics, new_dataset
 
 def date_validator(dataset, key='Date', format='%b-%y'):
     allowed_strftime = ['%b-%y', '%b-%Y', '%y-%b'] # add strfttime code as needed
+    new_dataset      = []
     metrics          = []
     counter          = 0
     pass_rate        = 0
@@ -129,6 +132,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
                 datetime.datetime.strptime(data[key], format)
 
                 counter += 1
+                new_dataset.append(data)
             except ValueError:
                 print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
 
@@ -142,7 +146,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
         print("ERROR [Validation] Key value not found in collection:", err)
         sys.exit(1)
 
-    return metrics
+    return metrics, new_dataset
 
 def metrics_table(*metrics):
     header_exist = False
@@ -174,15 +178,19 @@ budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
 
 # translation
-translated_date = date_translator(budget_data)
-translated_numeric = numeric_translator(budget_data, 'Revenue', int)
+budget_data = date_translator(budget_data)
+budget_data = numeric_translator(budget_data, 'Revenue', int)
 
 # validation
-date_metrics = date_validator(translated_date)
-numeric_metrics = numeric_validator(translated_numeric, 'Revenue', int)
+translated_date_metrics, budget_data = date_validator(budget_data)
+translated_numeric_metrics, budget_data = numeric_validator(budget_data, 'Revenue', int)
+
+validated_date_metrics, validated_date = date_validator(budget_data)
+validated_numeric_metrics, validated_numeric = numeric_validator(budget_data, 'Revenue', int)
 
 # metrics
-metrics_table(date_metrics, numeric_metrics)
+metrics_table(translated_date_metrics, translated_numeric_metrics)
+metrics_table(validated_date_metrics, validated_numeric_metrics)
 
 # for i, j in enumerate(budget_data):
 #      print(f"{i}  {j}")
