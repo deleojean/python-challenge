@@ -44,6 +44,7 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                     formatted_date = datetime.datetime.strptime(data[key], strftime).strftime(format)
 
                     data[key] = formatted_date
+                    new_dataset.append(data)
                     break
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
@@ -52,7 +53,6 @@ def date_translator(dataset, key='Date', format='%b-%y'):
 
                     continue
 
-            new_dataset.append(data)
     except KeyError as err:
         print("ERROR [Translation] Key value not found in collection:", err)
         sys.exit(1)
