@@ -48,7 +48,6 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
                         print(f"ERROR [Translation] Unhandled date format: '[{index}]{data[key]}'")
-                        print(f"DEBUG [Translation] Data removed from dataset: '[{index}]{data}'")
 
                     continue
 
@@ -76,7 +75,6 @@ def numeric_translator(dataset, key, format):
                 data[key] = formatted_numeric
             except:
                 print(f"ERROR [Translation] Unhandled numeric type: '[{index}]{data[key]}'")
-                print(f"DEBUG [Translation] Data removed from dataset: '[{index}]{data}'")
 
                 continue
 
@@ -103,7 +101,7 @@ def numeric_validator(dataset, key, format):
                 counter += 1
                 new_dataset.append(data)
             else:
-                print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
+                print(f"DEBUG [Validation] Invalid data removed from dataset: '[{index}]{data}'")
 
         fail = len(dataset) - counter
         pass_rate = (counter / len(dataset)) * 100 if counter >= 0 else pass_rate
@@ -134,7 +132,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
                 counter += 1
                 new_dataset.append(data)
             except ValueError:
-                print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
+                print(f"DEBUG [Validation] Invalid data removed from dataset: '[{index}]{data}'")
 
                 continue
 
