@@ -18,13 +18,14 @@ def csv_collector(*files):
 
     for file in files:
         if os.path.isfile(file): # validate file exist
-            print(f"DEBUG [Collection] Collect csv data to dataset: '{file}'")
 
             with open(file, 'r') as csvfile:
                 reader = csv.DictReader(csvfile)
                 for row in reader: new_dataset.append(row)
+
         else:
             print(f"ERROR [Collection] No such file or directory: '{file}'")
+            print(f"ERROR [Collection] Fail csv data merge to dataset: '{file}'")
 
     return new_dataset
 
@@ -46,11 +47,10 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                     break
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
-                        print(f"ERROR [Translation] Unhandled date format: '{data[key]}'")
+                        print(f"ERROR [Translation] Unhandled date format: '[{index}]{data[key]}'")
 
                         continue
 
-            # print(f"{index}  {data[key]}")
             new_dataset.append(data)
     except KeyError as err:
         print("ERROR [Translation] Key value not found in collection:", err)
@@ -74,7 +74,7 @@ def date_validator(dataset, key='Date', format='%b-%y'):
 
                 counter += 1
             except ValueError:
-                print(f"DEBUG [Validation] Date in invalid format: '{data[key]}'")
+                print(f"DEBUG [Validation] Date in invalid format: '[{index}]{data[key]}'")
 
                 continue
 
@@ -103,10 +103,9 @@ def metrics_table(*metrics):
 
 budget_data = []
 budget_data = csv_collector('raw_data/budget_data_1.csv', 'raw_data/budget_data_2.csv')
-metrics = date_validator(budget_data)
 budget_data = date_translator(budget_data)
-metrics2 = date_validator(budget_data)
-metrics_table(metrics, metrics2)
+metrics = date_validator(budget_data)
+metrics_table(metrics)
 
 # for i, j in enumerate(budget_data):
 #     print(f"{i}  {j}")
