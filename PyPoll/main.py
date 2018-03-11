@@ -21,6 +21,20 @@ def csv_collector(*files):
 
     return new_dataset
 
+def election_table(**kwargs):
+    print(f"\n {kwargs['title'].title()}") # column headers
+    print('-' * 60)
+
+    print(f" Total Votes: {kwargs['total']}")
+    print('-' * 60)
+
+    for key, value in kwargs['percentage'].items():
+        print(f" {key}: ".ljust(11) + f"{value}%".ljust(6) + f" ({kwargs['votes'][key]})")
+    print('-' * 60)
+
+    print(f" Winner: {kwargs['winner']}")
+    print('-' * 60)
+
 # collection
 election_data = []
 election_data = csv_collector('raw_data/election_data_1.csv', 'raw_data/election_data_2.csv')
@@ -68,19 +82,5 @@ for key, value in candidate_votes.items():
         winner = key
 
 winner
-
-def election_table(**kwargs):
-    print(f"\n {kwargs['title'].title()}") # column headers
-    print('-' * 60)
-
-    print(f" Total Votes: {kwargs['total']}")
-    print('-' * 60)
-
-    for key, value in kwargs['percentage'].items():
-        print(f" {key}: ".ljust(11) + f"{value}%".ljust(6) + f" ({kwargs['votes'][key]})")
-    print('-' * 60)
-
-    print(f" Winner: {kwargs['winner']}")
-    print('-' * 60)
 
 election_table(title='election results', total=total_votes, percentage=candidate_percentage, votes=candidate_votes, winner=winner)
