@@ -1,5 +1,5 @@
 import sys, os, csv
-sys.path.append('../SharedAssets')
+sys.path.append('../Plugins')
 from DateTranslator    import DateTranslator
 from DateValidator     import DateValidator
 from NumericTranslator import NumericTranslator
