@@ -36,7 +36,7 @@ def main():
 
     dataset = []
 
-    with open('../PyBank/raw_data/budget_data_1.csv', 'r') as csvfile:
+    with open('Test/budget_data_1.csv', 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader: dataset.append(row)
 
