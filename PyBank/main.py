@@ -48,7 +48,7 @@ def date_translator(dataset, key='Date', format='%b-%y'):
                     break
                 except ValueError:
                     if allowed_strftime.index(strftime) == len(allowed_strftime) - 1:
-                        print(f"ERROR [Translation] Unhandled date format: '[{index}]{data[key]}'")
+                        print(f"ERROR [Translation] Unhandled data format: '[{index}][date]{data[key]}'")
 
                     continue
 
@@ -76,7 +76,7 @@ def numeric_translator(dataset, key, format):
 
                 data[key] = formatted_numeric
             except:
-                print(f"ERROR [Translation] Unhandled numeric type: '[{index}]{data[key]}'")
+                print(f"ERROR [Translation] Unhandled data format: '[{index}][numeric]{data[key]}'")
 
                 continue
 
