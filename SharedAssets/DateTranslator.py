@@ -1,6 +1,5 @@
 import csv
 import datetime
-import sys
 from Translator import Translator
 
 class DateTranslator(Translator):
