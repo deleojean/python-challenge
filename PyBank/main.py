@@ -110,7 +110,7 @@ def financial_table(**kwargs):
         except:
             continue
 
-    print("\n")
+    print('-' * 60)
 
 key1 = 'Date'
 key2 = 'Revenue'
