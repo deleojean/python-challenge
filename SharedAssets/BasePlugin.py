@@ -19,9 +19,6 @@ class BasePlugin:
             print(f"ERROR [{self._stage}] Allowed '{kwargs['name']}({kwargs['parameter']})' arguments: '{kwargs['valid_values']}'")
             sys.exit(1)
 
-    def translate(self):
-        new_dataset = []
-
 def main():
 
     base = BasePlugin()
