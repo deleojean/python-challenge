@@ -162,8 +162,13 @@ def date_validator(dataset, key='Date', format='%b-%y', returns='all'):
     if returns == 'metrics': return metrics
     if returns == 'all'    : return new_dataset, metrics
 
-def metrics_table(*metrics):
-    header_exist = False
+def metrics_table(*metrics, title='required'):
+    function_name = 'metrics_table'
+    header_exist  = False
+
+    if title == 'required':
+        print(f"ERROR [Metrics] '{function_name}(title)' arguments: 'required'")
+        sys.exit(1)
 
     for metric in metrics:
         try:
@@ -173,7 +178,7 @@ def metrics_table(*metrics):
                 rate     = data['rate']
 
             if not header_exist:
-                print("\n Data Name".ljust(27) + " Pass/Fail".ljust(20) + " Pass Rate".rjust(6)) # column headers
+                print(f"\n {title.title()}".ljust(27) + " Pass/Fail".ljust(20) + " Pass Rate".rjust(6)) # column headers
                 print('-' * 60)
                 header_exist = True
 
@@ -203,8 +208,8 @@ validated_date_metrics = date_validator(budget_data, returns='metrics')
 validated_numeric_metrics = numeric_validator(budget_data, 'Revenue', int, returns='metrics')
 
 # metrics
-metrics_table(translated_date_metrics, translated_numeric_metrics)
-metrics_table(validated_date_metrics, validated_numeric_metrics)
+metrics_table(translated_date_metrics, translated_numeric_metrics, title='translation')
+metrics_table(validated_date_metrics, validated_numeric_metrics, title='validation')
 
 # for i, j in enumerate(budget_data):
 #      print(f"{i}  {j}")
