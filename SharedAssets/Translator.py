@@ -7,6 +7,9 @@ class Translator(BasePlugin):
     def __init__(self):
         self._allowed_values = []
 
+    def translate(self):
+        new_dataset = []
+
 def main():
 
     translate = Translator()
