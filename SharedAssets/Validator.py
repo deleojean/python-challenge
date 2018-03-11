@@ -8,7 +8,7 @@ class Validator(BasePlugin):
         self._allowed_values = []
 
     def validate(self):
-        new_dataset   = []
+        new_dataset = []
 
 def main():
 
