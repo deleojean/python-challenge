@@ -1,6 +1,5 @@
 
-class Translator:
-    _stage = 'Translation'
+class BasePlugin:
 
     def __init__(self):
         self._allowed_values = []
@@ -25,6 +24,6 @@ class Translator:
 
 def main():
 
-    translate = Translator()
+    base = BasePlugin()
 
 if __name__ == '__main__': main()
